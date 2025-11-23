@@ -1,96 +1,505 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  margin: 25px 0 0 0;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+#menu {
+    padding: 10px 0;
+    width: 100%;
+    top: 0;
+
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+#menu nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center; /* Alinea los botones a la derecha */
+    gap: 15px; /* Espacio entre los botones */
+    padding: 0 20px; /* Padding lateral */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+
+#menu button {
+    /* Estilo del texto y fondo */
+    background-color: #34495e; /* Gris/Azul oscuro para los botones */
+    color: #ecf0f1; /* Texto blanco/gris claro */
+    font-size: 1em;
+    font-weight: 600;
+    padding: 8px 15px;
+    
+    /* Forma y borde */
+    border: 2px solid #34495e; /* Borde del mismo color que el fondo por defecto */
+    border-radius: 6px;
+    cursor: pointer;
+    
+    /* Transiciones suaves */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Efecto al pasar el ratón (hover) */
+#menu button:hover {
+    background-color: #2c3e50; /* Fondo ligeramente más oscuro */
+    border-color: #f1c40f; /* Borde de color de acento (Amarillo) */
+    color: #f1c40f;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+@media (max-width: 600px) {
+    #menu nav {
+        /* Permite que los botones se apilen si es necesario */
+        flex-wrap: wrap; 
+        justify-content: center; /* Centra los botones */
+        padding: 5px 10px;
+        gap: 10px;
+    }
+
+    #menu button {
+        /* Ajusta el tamaño para que encaje mejor en pantallas pequeñas */
+        flex-grow: 1; /* Permite que los botones se expandan un poco */
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
 }
 
-.card {
-  padding: 2em;
+.historial-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px 30px;
+    background-color: #2c3e50; /* Fondo oscuro (Azul Marino) */
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+    color: #ecf0f1;
 }
 
-.read-the-docs {
-  color: #888;
+.historial-container h1 {
+    color: #f1c40f; /* Amarillo Yu-Gi-Oh! */
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    border-bottom: 3px solid #34495e;
+    padding-bottom: 15px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.historial-container button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 25px;
+    background-color: #3498db; /* Azul */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.historial-container button:hover {
+    background-color: #2980b9;
+}
+
+.batallas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Estilo para cada registro de batalla */
+.historial-item {
+    padding: 18px;
+    border-radius: 8px;
+    border-left: 6px solid #7f8c8d; /* Borde gris por defecto */
+    background-color: #34495e; /* Fondo de la tarjeta */
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden; /* Para contener los floats si se usan */
+}
+
+.historial-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Metadatos (Fecha y Resultado) */
+.meta-data {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #4a637a;
+}
+
+.fecha {
+    color: #bdc3c7; /* Gris claro */
+}
+
+.resultado {
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+/* Detalle de las cartas enfrentadas */
+.detalle-batalla {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.05em;
+    font-weight: 500;
+}
+
+.jugador {
+    flex-basis: 45%; /* Da espacio para el texto */
+    padding: 5px;
+}
+
+.jugador strong {
+    font-weight: 800;
+    color: #f1c40f; /* Nombre del jugador destacado */
+}
+
+.vs {
+    font-style: italic;
+    color: #e67e22; /* Naranja para VS */
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* --- ESTILOS CONDICIONALES PARA EL GANADOR --- */
+
+/* Ganador Jugador 1 */
+.winner-j1 {
+    border-left-color: #2ecc71; /* Verde esmeralda */
+}
+.winner-j1 .resultado {
+    color: #2ecc71;
+}
+
+/* Ganador Jugador 2 */
+.winner-j2 {
+    border-left-color: #e74c3c; /* Rojo de alarma */
+}
+.winner-j2 .resultado {
+    color: #e74c3c;
+}
+
+/* Empate */
+.tie {
+    border-left-color: #3498db; /* Azul */
+}
+.tie .resultado {
+    color: #3498db;
+}
+
+/* Mensaje de error (si falla la conexión a DB) */
+.error-message {
+    color: #e74c3c;
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fdd;
+    border: 1px solid #e74c3c;
+    border-radius: 5px;
+}
+
+.battle-setup {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #1e272e; /* Fondo oscuro, coordinado con el menú */
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+    color: #ecf0f1;
+    text-align: center;
+}
+
+.battle-setup h1 {
+    color: #f1c40f; /* Amarillo de acento */
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Contenedor Flex para los dos jugadores */
+.setup-form {
+    display: flex;
+    flex-wrap: wrap; /* Permite que se apilen en móviles */
+    justify-content: space-between;
+    gap: 30px;
+}
+
+/* Sección de cada jugador (Jugador 1 y Jugador 2) */
+.player-setup {
+    flex-basis: calc(50% - 15px); /* Ocupa casi la mitad del espacio */
+    padding: 20px;
+    background-color: #2c3e50; /* Fondo ligeramente más claro para la sección */
+    border-radius: 10px;
+    border: 1px solid #34495e;
+    transition: transform 0.3s;
+}
+
+.player-setup:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.player-setup h3 {
+    color: #3498db; /* Azul vibrante */
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+/* Estilos para Inputs y Selects */
+.player-setup input[type="text"],
+.player-setup select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #4a637a;
+    border-radius: 6px;
+    background-color: #1e272e; /* Coincide con el fondo principal */
+    color: #ecf0f1;
+    font-size: 1em;
+    appearance: none; /* Deshabilita el estilo nativo para mejor control visual */
+    cursor: pointer;
+    box-sizing: border-box; /* Importante para el padding/width */
+}
+
+/* Estilo para el texto dentro del select */
+.player-setup select option {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.player-setup input[type="text"]::placeholder {
+    color: #95a5a6;
+}
+
+/* Botón de Comenzar Batalla */
+#startButton {
+    flex-basis: 100%; /* Ocupa todo el ancho */
+    padding: 15px;
+    background-color: #e67e22; /* Naranja/Bronce para el botón principal */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    margin-top: 10px;
+}
+
+#startButton:hover {
+    background-color: #d35400; /* Naranja más oscuro al pasar el ratón */
+    transform: scale(1.02);
+}
+
+/* Mensaje de error */
+#error-message {
+    flex-basis: 100%;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #4a1f1f;
+    border: 1px solid #e74c3c;
+    border-radius: 5px;
+}
+
+/* ------------------------------------------- */
+/* --- RESPONSIVIDAD (Móviles) --- */
+/* ------------------------------------------- */
+@media (max-width: 650px) {
+    .battle-setup {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    
+    .battle-setup h1 {
+        font-size: 2em;
+    }
+
+    .setup-form {
+        flex-direction: column; /* Apila los jugadores verticalmente */
+        gap: 20px;
+    }
+
+    .player-setup {
+        flex-basis: 100%; /* Ocupa todo el ancho disponible */
+        padding: 15px;
+    }
+}
+
+.battle-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #1e272e; /* Fondo oscuro */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    color: #ecf0f1;
+    text-align: center;
+}
+
+.battle-title {
+    color: #f1c40f;
+    font-size: 2.8em;
+    margin-bottom: 30px;
+}
+
+/* Grid para posicionar a los dos jugadores y el separador VS */
+.players-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Tarjeta individual de cada jugador */
+.player-card {
+    flex-basis: 40%; /* Un poco menos de la mitad para dar espacio al separador */
+    padding: 20px;
+    background-color: #2c3e50; /* Fondo de tarjeta más claro */
+    border-radius: 10px;
+    border: 3px solid transparent; /* Borde transparente por defecto */
+    transition: all 0.3s ease;
+}
+
+.player-card h4 {
+    font-size: 1.5em;
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+/* Imagen de la carta */
+.card-image {
+    width: 100%;
+    max-width: 180px; /* Tamaño máximo para la carta */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    margin-bottom: 15px;
+}
+
+.player-card p {
+    margin: 8px 0;
+    font-size: 1.1em;
+}
+
+.power-stat {
+    font-weight: bold;
+    color: #f39c12; /* Naranja/Amarillo para el poder */
+    font-size: 1.2em;
+}
+
+/* --- ESTILOS DEL SEPARADOR VS Y MENSAJE DE RESULTADO --- */
+
+.vs-divider {
+    flex-basis: 15%; /* Espacio para el mensaje central */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    text-align: center;
+}
+
+.result-message {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Estilos condicionales para el resultado */
+.winner {
+    color: #2ecc71; /* Verde para ganar */
+    background-color: #1f3a2b;
+    border: 1px solid #2ecc71;
+}
+
+.tie {
+    color: #3498db; /* Azul para empate */
+    background-color: #263847;
+    border: 1px solid #3498db;
+}
+
+/* Estilo para destacar la tarjeta del ganador */
+.is-winner {
+    border-color: #2ecc71; /* Borde verde brillante */
+    box-shadow: 0 0 25px #2ecc7180; /* Resplandor suave */
+    transform: scale(1.03);
+}
+
+.is-winner h4 {
+    color: #2ecc71;
+}
+
+/* Botón de Jugar Otra Vez (dentro del vs-divider) */
+.vs-divider button {
+    padding: 10px 20px;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.vs-divider button:hover {
+    background-color: #d35400;
+}
+
+/* Estado de la Base de Datos */
+.db-status {
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    color: #bdc3c7;
+}
+
+.db-status-text.success {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.db-status-text.error {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* ------------------------------------------- */
+/* --- RESPONSIVIDAD (Móviles) --- */
+/* ------------------------------------------- */
+@media (max-width: 768px) {
+    .battle-container {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+    
+    .battle-title {
+        font-size: 2em;
+    }
+
+    .players-grid {
+        flex-direction: column; /* Apila los jugadores verticalmente */
+        align-items: center;
+    }
+
+    .player-card {
+        flex-basis: 100%; /* Ocupa todo el ancho */
+        max-width: 350px; /* Limita el ancho en vertical */
+        margin-bottom: 20px;
+    }
+
+    .vs-divider {
+        flex-basis: 100%;
+        width: 100%;
+        padding-top: 0;
+        margin-bottom: 20px;
+    }
+    
+    .result-message {
+        font-size: 1.5em;
+    }
 }
