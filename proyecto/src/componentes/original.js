@@ -2,7 +2,7 @@ import { db } from '../firebaseConfig.js';
 import { collection, addDoc } from 'firebase/firestore';
 
 // ----------------------------------------------------------------------
-// --- 1. ESTRUCTURAS DE DATOS Y PERSISTENCIA ---
+// --- 1. ESTRUCTURAS DE DATOS Y PERSISTENCIA (Sin cambios) ---
 // ----------------------------------------------------------------------
 
 class Carta {
@@ -71,13 +71,9 @@ function renderizarResultadoBatalla(appContainer, registro) {
 }
 
 // ----------------------------------------------------------------------
-// --- 2. FUNCIÓN DE RENDERIZADO DEL FORMULARIO (AHORA ASÍNCRONA) ---
+// --- 2. FUNCIÓN DE RENDERIZADO DEL FORMULARIO (APLICANDO CORRECCIONES) ---
 // ----------------------------------------------------------------------
 
-/**
- * Carga cartas de la API, renderiza el formulario de configuración 
- * y añade el Event Listener para iniciar la batalla.
- */
 async function mostrarFormularioBatalla() {
     const appContainer = document.getElementById("app");
     if (!appContainer) return;
@@ -86,26 +82,21 @@ async function mostrarFormularioBatalla() {
 
     let cartasDisponibles = [];
     try {
-        // Llama a la API para obtener un conjunto de cartas. 
-        // Se usa un filtro para obtener solo 10 cartas al azar y reducir la carga.
         const response = await fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?num=10&offset=10");
         const data = await response.json();
         
-        // Mapear los datos de la API a nuestras instancias de Carta
         cartasDisponibles = data.data
-            .filter(card => card.atk !== undefined) // Solo monstruos con ATK para el poder
+            .filter(card => card.atk !== undefined && card.card_images && card.card_images.length > 0)
             .map(card => {
-                // Usamos el valor de ATK como "poder" para la batalla
                 const poder = card.atk;
-                // Usamos la URL de la imagen pequeña
-                const imageUrl = card.card_images && card.card_images.length > 0 
-                             ? card.card_images[0].image_url_small 
-                             : 'placeholder.png';
+                const imageUrl = card.card_images[0].image_url_small; 
+                
                 return new Carta(card.name, poder, imageUrl);
             });
         
         if (cartasDisponibles.length === 0) {
-            throw new Error("No se pudieron cargar cartas válidas (con ATK) desde la API.");
+            appContainer.innerHTML = "<p>Error: No se pudieron cargar cartas válidas (monstruos con ATK) desde la API. Intente de nuevo.</p>";
+            return;
         }
 
     } catch (error) {
@@ -116,8 +107,9 @@ async function mostrarFormularioBatalla() {
     
     // Crear las opciones para el <select>
     const optionsHtml = cartasDisponibles.map(c => 
-        // Usamos el formato "nombre:poder:url" para pasar los datos en el valor del option
-        `<option value="${c.nombre}:${c.poder}:${c.imagenUrl}">${c.nombre} (Poder: ${c.poder})</option>`
+        // 1. **CLAVE:** USAR '|||' COMO SEPARADOR DE DATOS PARA EVITAR CORTAR LA URL
+        // 2. **CLAVE:** QUITAR EL PODER DE LA ETIQUETA VISIBLE (Texto entre <option>...</option>)
+        `<option value="${c.nombre}|||${c.poder}|||${c.imagenUrl}">${c.nombre}</option>`
     ).join('');
 
     appContainer.innerHTML = `
@@ -163,11 +155,13 @@ async function mostrarFormularioBatalla() {
              return;
         }
         
-        // Desestructuramos el valor para obtener los datos de la carta
-        const [c1Name, c1Poder, c1Url] = j1CardValue.split(':');
-        const [c2Name, c2Poder, c2Url] = j2CardValue.split(':');
+        // **CLAVE:** USAR '|||' PARA DESESTRUCTURAR, MANTENIENDO LAS TRES PARTES
+        const [c1Name, c1Poder, c1Url] = j1CardValue.split('|||');
+        const [c2Name, c2Poder, c2Url] = j2CardValue.split('|||');
         
-        // Creamos las instancias de Jugador y Carta con los datos obtenidos
+        // Si c1Url o c2Url es "https", algo sigue mal en el split.
+        // Pero si el split funciona, la URL completa debe estar aquí.
+        
         const carta1 = new Carta(c1Name, parseInt(c1Poder), c1Url);
         const carta2 = new Carta(c2Name, parseInt(c2Poder), c2Url);
         
@@ -176,20 +170,18 @@ async function mostrarFormularioBatalla() {
 
         appContainer.innerHTML = "<h2>¡Batalla en curso! 💥</h2>";
         
-        // Llamar a la función principal con los datos del formulario
         await mostrarOriginal(jugador1, jugador2);
     });
 }
 
 // ----------------------------------------------------------------------
-// --- 4. FUNCIÓN PRINCIPAL DE LA LÓGICA DE BATALLA ---
+// --- 4. FUNCIÓN PRINCIPAL DE LA LÓGICA DE BATALLA (Sin cambios) ---
 // ----------------------------------------------------------------------
 
 export async function mostrarOriginal(jugador1, jugador2) {
     const appContainer = document.getElementById("app");
     if (!appContainer) return;
     
-    // Las cartas ya vienen preseleccionadas en el mazo del jugador
     const cartaJ1 = jugador1.mazo[0];
     const cartaJ2 = jugador2.mazo[0];
     
@@ -211,7 +203,6 @@ export async function mostrarOriginal(jugador1, jugador2) {
     
     renderizarResultadoBatalla(appContainer, registroBatalla);
     
-    // Persistencia en Firebase
     const dbStatusElement = document.getElementById("db-status-text");
     if (dbStatusElement) {
         dbStatusElement.textContent = "Guardando...";
